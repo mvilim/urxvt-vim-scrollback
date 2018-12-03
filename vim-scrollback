@@ -187,14 +187,8 @@ sub enter {
    $self->{visual_ecnum};
    $self->{visual_rectangle};
 
-   my $end = $self->line($lnum)->end;
-   if ($end == $self->nrow - 1){
-     $self->screen_cur($end, 0);
-     $self->scr_add_lines("\n");
-     $self->{orig_lnum} = $lnum - 1;
-     $self->{out_lnum} = $lnum - 1;
-     $self->screen_cur($self->{orig_lnum}, $cnum);
-   }
+   # it's not clear to me why this was off by 2...
+   $self->{out_lnum} = $lnum + 2;
 
    $self->{term_buffer} = [];
    $self->{term_undo} = [];
@@ -1056,9 +1050,6 @@ sub msg {
 
    my $pad = $self->ncol - length($msg) - 3;
    $msg = sprintf("%s %${pad}s", $msg, $self->{key_buffer} . $percentage);
-
-   $self->{overlay} = $self->overlay(0, -1, $self->ncol, 1, $self->{msg_style}, 0);
-   $self->{overlay}->set(0, 0, $msg);
 }
 
 # copied from matcher
